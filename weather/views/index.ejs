@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="https://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+	<script src="https://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+<!-- 	<script src="../exporting.js"></script>
+	<script src="../highChartZh.js"></script> -->
+</head>
+<body>
+	<div id="container" style="min-width:400px;height:400px"></div>
+	<script type="text/javascript">
+		$(function () {
+			function travel(body,str){
+				var arr=[],tmp='';
+				for(var i=0;i<body.length;i++){
+					if(str==='qw1'||str==='qw2'){
+						tmp=parseFloat(body[i][str]);
+					}else{
+						tmp=body[i][str]+' '+body[i].tq1;
+					}
+					arr.push(tmp);
+				 }
+				return arr;
+			}
+			$.ajax({
+			  url: "http://localhost:3000/api/weather/",
+			  cache: false,
+			  success: function(data){
+			  		data=JSON.parse(data);
+					alert(data.data.list[0]['qw1']);
+			   		$('#container').highcharts({
+				        chart: {
+				            type: 'line'
+				        },
+				        title: {
+				            text: '中山市未来七天天气'
+				        },
+				        subtitle: {
+				            text: '查询时间 '+data.data.sj,
+				        },
+				     
+				        xAxis:{
+				         	categories:travel(data.data.list,'date'),
+				         		
+				        },
+				        yAxis: {
+				            title: {
+				                text: '气温 (°C)'
+				            }
+				        },
+				        plotOptions: {
+				            line: {
+				                dataLabels: {
+				                    enabled: true          // 开启数据标签
+				                },
+				                enableMouseTracking: false // 关闭鼠标跟踪，对应的提示框、点击事件会失效
+				            }
+				        },
+				        series: [{
+				            name: '白天气温',
+				            data:travel(data.data.list,'qw1'),
+				        },{
+				        	name: '夜间气温',
+				            data:travel(data.data.list,'qw2'),
+
+				        }]
+				 	});
+			  }
+			});
+		    
+		});
+	</script>
+</body>
+</html>

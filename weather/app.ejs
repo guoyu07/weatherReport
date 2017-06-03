@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="https://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+	<script src="https://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+	<script src="../exporting.js"></script>
+	<script src="../highChartZh.js"></script>
+</head>
+<body>
+	<div id="container" style="min-width:400px;height:400px"></div>
+	<script type="text/javascript">
+		$(function () {
+			$.ajax({
+			  url: "http://localhost:3000/api/weather/",
+			  cache: false,
+			  success: function(data){
+			   		$('#container').highcharts({
+				        chart: {
+				            type: 'line'
+				        },
+				        title: {
+				            text: '中山市未来七天天气温度'
+				        },
+				        subtitle: {
+				            text: 'www.kiwis.com'
+				        },
+				        // xAxis: {
+				        //     categories: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+				        // },
+				        xAxis:function(){
+				        	var categories=[];
+				        	$.each(data.list,function(i,n){
+				        		categories.push(data.list[i].date);
+				        	});
+				        	return categories;
+				        }
+				        yAxis: {
+				            title: {
+				                text: '气温 (°C)'
+				            }
+				        },
+				        plotOptions: {
+				            line: {
+				                dataLabels: {
+				                    enabled: true          // 开启数据标签
+				                },
+				                enableMouseTracking: false // 关闭鼠标跟踪，对应的提示框、点击事件会失效
+				            }
+				        },
+				        series: [{
+				            name: '中山',
+				            data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+				        }]
+				 	});
+			  	}
+			});
+		    
+		});
+	</script>
+</body>
+</html>
